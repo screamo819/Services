@@ -9,74 +9,98 @@ import UIKit
 
 class TEXTFieldViewController: UIViewController {
     
-    var textButton: UIButton!
-    var textField: UITextField!
-    var textFieldBottomConstraint: NSLayoutConstraint!
+    var updatingData: String = ""
+    var dataUpdateClosure: ((String) -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
      
-        view.backgroundColor = .systemTeal
-        
-        textButton = UIButton()
-        textField = UITextField()
-        
-        view.addSubview(textButton)
-        view.addSubview(textField)
-        
-        textButton.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
-        textField.isHidden = true
-        textField.delegate = self
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillShow),
-            name: UIResponder.keyboardWillShowNotification,
-            object: nil
-        )
-        
-        createButton()
-        createTextfield()
+        view.backgroundColor = .systemBackground
+        view.layer.cornerRadius = 24
+        createTextfieldView()
+        createButtonStackView()
     }
-    
-    func createButton() {
-        textButton.backgroundColor = .systemRed
-        textButton.translatesAutoresizingMaskIntoConstraints = false
-        textButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12).isActive = true
-        textButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -12).isActive = true
-        textButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 40).isActive = true
-        textButton.heightAnchor.constraint(equalToConstant: 76).isActive = true
-    }
-    
-    func createTextfield() {
-        textField.placeholder = "text"
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12).isActive = true
-        textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -12).isActive = true
-        textField.topAnchor.constraint(equalTo: textButton.bottomAnchor, constant: 40).isActive = true
-        textField.heightAnchor.constraint(equalToConstant: 76).isActive = true
 
-    }
-    
-    var keyboardHeight: CGFloat = 0
-    
-    @objc func buttonPressed() {
+    var textField = UITextField()
+    func setupTextField() {
+        textField.font = .systemFont(ofSize: 16)
+        textField.tintColor = .systemGreen
+        textField.layer.borderColor = UIColor.black.cgColor
+        textField.layer.cornerRadius = 16
+        textField.placeholder = "Что нужно сделать?"
         textField.becomeFirstResponder()
-        print("button pressed")
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.addTarget(self, action: #selector(textFieldChanged), for: .editingChanged)
     }
     
-    @objc func keyboardWillShow(_ notification: Notification) {
-        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-            let keyboardHeight = keyboardFrame.cgRectValue.height
-            self.keyboardHeight = keyboardHeight
-        }
+    var closeButton = UIButton()
+    func setupCloseButton() {
+        closeButton.setTitle("Закрыть", for: .normal)
+        closeButton.setTitleColor(.systemGreen, for: .normal)
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        closeButton.addTarget(self, action: #selector(closePressed), for: .touchUpInside)
+    }
+    
+    @objc func closePressed() {
+        print("close button pressed")
+        dismiss(animated: true)
+    }
+    
+    var doneButton = UIButton()
+    func setupDoneButton() {
+        doneButton.setTitle("Готово", for: .normal)
+        doneButton.setTitleColor(.systemGreen, for: .normal)
+        doneButton.translatesAutoresizingMaskIntoConstraints = false
+        doneButton.addTarget(self, action: #selector(donePressed), for: .touchUpInside)
+    }
+    
+    @objc func donePressed() {
+        print("done button pressed")
+        let updatedData = textField.text ?? ""
+        dataUpdateClosure?(updatedData)
+        self.dismiss(animated: true)
+    }
+    
+    var buttonStack = UIStackView()
+    func setupButtonStack() {
+        buttonStack.addArrangedSubview(closeButton)
+        buttonStack.addArrangedSubview(doneButton)
+        buttonStack.axis = .horizontal
+        buttonStack.distribution = .equalCentering
+        buttonStack.translatesAutoresizingMaskIntoConstraints = false
+    }
+
+    func createButtonStackView() {
+        
+        view.addSubview(buttonStack)
+        setupCloseButton()
+        setupDoneButton()
+        setupButtonStack()
+        
+        buttonStack.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        buttonStack.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 16).isActive = true
+        buttonStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+        buttonStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
+    }
+    
+    func createTextfieldView() {
+        
+        setupTextField()
+        view.addSubview(textField)
+
+        textField.topAnchor.constraint(equalTo: view.topAnchor, constant:  12).isActive = true
+        textField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+        textField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
+        textField.heightAnchor.constraint(equalToConstant: 120).isActive = true
     }
 }
 
 extension TEXTFieldViewController: UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        textField.isHidden = false
-        textFieldBottomConstraint.constant = keyboardHeight
-        return true
+    @objc private func textFieldChanged() {
+        if textField.text?.isEmpty == false {
+            doneButton.isEnabled = true
+        } else {
+            doneButton.isEnabled = false
+        }
     }
 }
