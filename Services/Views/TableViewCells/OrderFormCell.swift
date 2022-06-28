@@ -41,8 +41,6 @@ class OrderFormCell: UITableViewCell {
     }
     
     func setupCell() {
-//        textField.addTarget(self, action: #selector(editText), for: .editingChanged)
-        
         textField.translatesAutoresizingMaskIntoConstraints = false
         image.translatesAutoresizingMaskIntoConstraints = false
         
@@ -60,9 +58,4 @@ class OrderFormCell: UITableViewCell {
                            contentView.layoutMarginsGuide.trailingAnchor).isActive = true
         textField.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
     }
-    
-//    @objc func editText() {
-//        handler?(textField.text)
-//        print("editing textfield")
-//    }
 }
