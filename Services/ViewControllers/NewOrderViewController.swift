@@ -66,6 +66,7 @@ class NewOrderViewController: UIViewController {
         definesPresentationContext = true
         searchController.searchBar.placeholder = "Услуга или специалист"
         tableView.tableHeaderView = searchController.searchBar
+        definesPresentationContext = true
     }
     
     func setupCustomButton() {
@@ -111,18 +112,23 @@ extension NewOrderViewController:  UITableViewDelegate, UITableViewDataSource {
         if isFiltering {
             return filtredServices.count
         }
-        return services.count
+        return services.isEmpty ? 0 : services.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
 
-        let _ = isFiltering ? filtredServices[indexPath.row]
-        : services[indexPath.row]
-        
-        cell.title.text = services[indexPath.row].title
-        cell.titleDescription.text = services[indexPath.row].description
-        cell.serviceImage.image = services[indexPath.row].image
+        if isFiltering {
+            filtredServices[indexPath.row]
+            cell.title.text = filtredServices[indexPath.row].title
+            cell.titleDescription.text = filtredServices[indexPath.row].description
+            cell.serviceImage.image = filtredServices[indexPath.row].image
+        } else {
+            services[indexPath.row]
+            cell.title.text = services[indexPath.row].title
+            cell.titleDescription.text = services[indexPath.row].description
+            cell.serviceImage.image = services[indexPath.row].image
+        }
         
         cell.serviceImage.layer.cornerRadius = cell.serviceImage.frame.size.height / 2
         cell.serviceImage.clipsToBounds = true
