@@ -29,7 +29,7 @@ class CustomTableViewCell: UITableViewCell {
     lazy var serviceImage: UIImageView = {
         let image = UIImageView()
         image.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-        image.tintColor = UIColor(red: .random(), green: .random(), blue: .random(), alpha: 1.0)
+        image.tintColor = UIColor(red: .random(), green: 0.6, blue: .random(), alpha: 0.7)
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()
@@ -64,7 +64,6 @@ class CustomTableViewCell: UITableViewCell {
         
         }
 }
-
 
 extension CGFloat {
     static func random() -> CGFloat {
