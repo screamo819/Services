@@ -33,6 +33,5 @@ class CreateButton : UIButton {
     
     @objc func addOrder() {
         closure()
-        print("Создан заказ")
     }
 }
