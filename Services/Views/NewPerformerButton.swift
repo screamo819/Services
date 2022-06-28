@@ -7,7 +7,7 @@
 
 import UIKit
 
-class NewPerformerButton: UIView {
+class NewPerformerButton: UIButton {
     
     lazy var nextButton: UIButton = {
         let nextButton = UIButton(type: .custom)
@@ -72,12 +72,12 @@ class NewPerformerButton: UIView {
         setupButton()
     }
     
-        
     func setupButton() {
         backgroundColor = .white
         addSubview(buttonView)
+        addTarget(self, action: #selector(becomePerformer), for: .touchUpInside)
         setupView()
-//        startAnimatingPressActions()
+        startAnimatingPressActions()
     }
     
     func setupView() {
@@ -102,6 +102,9 @@ class NewPerformerButton: UIView {
         buttonView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         buttonView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         buttonView.heightAnchor.constraint(equalToConstant: 76).isActive = true
-        
+    }
+    
+    @objc func becomePerformer() {
+        print("Переход на новый экран СТАТЬ ИСПОЛНИТЕЛЕМ")
     }
 }
