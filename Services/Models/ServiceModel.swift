@@ -30,20 +30,6 @@ struct Services {
                                      description: serviceDescriptions[i],
                                      image: serviceImages[i]))
         }
-        
-        //        for service in serviceNames {
-        //
-        //                for service in serviceNames {
-        //                    services.append(Services(title: service))
-        //                }
-        //                for serviceDescription in serviceDescriptions {
-        //                    services.append(Services(description: serviceDescription))
-        //                }
-        //                for serviceImage in serviceImages {
-        //                    services.append(Services(image: serviceImage))
-        //                }
-        //        }
-        
         return services
     }
     
