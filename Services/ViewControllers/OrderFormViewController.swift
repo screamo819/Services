@@ -11,7 +11,7 @@ class OrderFormViewController: UIViewController, UINavigationControllerDelegate 
     
     var imageIsChanged = false
     var currentOrders: ChooseServiceModel!
-    let orders = OrderFormModel.getOrderValues()
+    var orders = OrderFormModel.getOrderValues()
     var tableView: UITableView!
     var createButton: UIButton!
     let customButton = NewPerformerButton()
@@ -27,6 +27,11 @@ class OrderFormViewController: UIViewController, UINavigationControllerDelegate 
         view.addSubview(customButton)
         setupCreateOrderButton()
         setupCustomButton()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
     }
     
     private func setupNavigationBar() -> UIView {
@@ -111,32 +116,25 @@ class OrderFormViewController: UIViewController, UINavigationControllerDelegate 
         if indexPath.row == 0 || indexPath.row == 2 {
 // MARK: - EnterText
             
-         let textFieldVC = AlarmaVC()
-            textFieldVC.modalPresentationStyle = .pageSheet
-            textFieldVC.popoverPresentationController?.permittedArrowDirections = .up
-
-            self.present(textFieldVC, animated: true)
-
-        
-//
-//            let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-//            let entertext = UIAlertAction(title: "", style: .default) {
-//                _ in
-//                let textfield = UITextField()
-//                self.view.addSubview(textfield)
-//                textfield.placeholder = "KKKKKKKKKKKK"
-//                textfield.translatesAutoresizingMaskIntoConstraints = false
-//                textfield.topAnchor.constraint(equalTo:  self.view.topAnchor).isActive = true
-//                textfield.bottomAnchor.constraint(equalTo:  self.view.bottomAnchor).isActive = true
-//                textfield.leadingAnchor.constraint(equalTo:  self.view.leadingAnchor).isActive = true
-//                textfield.trailingAnchor.constraint(equalTo:  self.view.trailingAnchor).isActive = true
-//            }
-//
-//            actionSheet.addAction(entertext)
-//
-//            present(actionSheet, animated: true)
+         let textFieldVC = TEXTFieldViewController()
             
+            if let sheet = textFieldVC.sheetPresentationController {
+                sheet.detents = [.medium(), .large()]
+                sheet.selectedDetentIdentifier = .medium
+                sheet.largestUndimmedDetentIdentifier = .large
+                sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+                sheet.prefersEdgeAttachedInCompactHeight = false
+                sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
+                sheet.prefersGrabberVisible = true
+                sheet.preferredCornerRadius = 24
+            }
             
+            present(textFieldVC, animated: true)
+            
+            textFieldVC.dataUpdateClosure = { [ weak self ] updatedText in
+                self?.orders[indexPath.row].textFieldText = updatedText
+                tableView.reloadData()
+            }
             
         } else if indexPath.row == 1 {
             
@@ -205,9 +203,16 @@ extension OrderFormViewController: UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell3", for: indexPath) as! OrderFormCell
         
         cell.textField.text = orders[indexPath.row].textFieldText
-        cell.textField.textColor = .systemGray4
+        
+        if cell.textField.text == orders[indexPath.row].textFieldText {
+            cell.textField.textColor = .systemGray4
+        } else {
+            cell.textField.textColor = .black
+        }
+        
         cell.image.image = orders[indexPath.row].image
         return cell
+        
     }
 }
 
