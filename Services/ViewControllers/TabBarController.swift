@@ -27,7 +27,7 @@ class TabBar: UITabBarController {
         UITabBar.appearance().backgroundImage = UIImage()
         UITabBar.appearance().barTintColor = .systemBackground
         setupVCs()
-        setupNavControllerBar()
+//        setupNavControllerBar()
     }
     
     func setupVCs() {
@@ -37,15 +37,15 @@ class TabBar: UITabBarController {
         ]
     }
     
-    func setupNavControllerBar() {
-        
-        navigationController?.navigationBar.layer.shadowColor = UIColor.lightGray.cgColor
-        navigationController?.navigationBar.layer.shadowOpacity = 0.4
-        navigationController?.navigationBar.layer.shadowOffset = .zero
-        navigationController?.navigationBar.layer.shadowRadius = 3
-        navigationController?.navigationBar.backgroundColor = .systemBackground
-       
-    }
+//    func setupNavControllerBar() {
+//
+//        navigationController?.navigationBar.layer.shadowColor = UIColor.lightGray.cgColor
+//        navigationController?.navigationBar.layer.shadowOpacity = 0.4
+//        navigationController?.navigationBar.layer.shadowOffset = .zero
+//        navigationController?.navigationBar.layer.shadowRadius = 3
+//        navigationController?.navigationBar.backgroundColor = .systemBackground
+//
+//    }
     
     fileprivate func createNavController(for rootViewController: UIViewController,
                                          title: String,
@@ -54,10 +54,6 @@ class TabBar: UITabBarController {
         navController.tabBarItem.title = title
         navController.tabBarItem.image = image
         navController.navigationBar.prefersLargeTitles = false
-        navController.navigationBar.layer.shadowColor = UIColor.lightGray.cgColor
-        navController.navigationBar.layer.shadowOpacity = 0.5
-        navController.navigationBar.layer.shadowOffset = .zero
-        navController.navigationBar.layer.shadowRadius = 5
         navController.navigationBar.backgroundColor = .systemBackground
         navController.navigationBar.layer.masksToBounds = false
         
